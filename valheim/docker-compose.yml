@@ -1,5 +1,13 @@
 version: "3.9"
 
+secrets:
+  server_pass:
+    file: ./server_pass.secret
+  server_name:
+    file: ./server_name.secret
+  server_sup_password:
+    file: ./supervisor_pass.secret
+
 services: 
   valheim: 
     image: lloesche/valheim-server
@@ -17,12 +25,12 @@ services:
       - "9001:9001/tcp"
       - "9002:80/tcp"
     environment:
-      SERVER_NAME: valheim.nwest.games
+      SERVER_NAME: /run/secrets/server_name
       WORLD_NAME: Dedicated
-      SERVER_PASS: pen15
+      SERVER_PASS: /run/secrets/server_pass
       SERVER_PUBLIC: "true"
       SUPERVISOR_HTTP: "true"
-      SUPERVISOR_HTTP_PASS: password
+      SUPERVISOR_HTTP_PASS: /run/secrets/server_sup_password
       STATUS_HTTP: "true"
       BEPINEX: "true"
     restart: always
