@@ -3,8 +3,6 @@ version: "3.9"
 secrets:
   server_pass:
     file: ./server_pass.secret
-  server_name:
-    file: ./server_name.secret
   server_sup_password:
     file: ./supervisor_pass.secret
 
@@ -24,19 +22,8 @@ services:
       - "2456-2458:2456-2458/udp"
       - "9001:9001/tcp"
       - "9002:80/tcp"
-    secrets:
-      - server_name
-      - server_pass
-      - server_sup_password
-    environment:
-      SERVER_NAME: /run/secrets/server_name
-      WORLD_NAME: Dedicated
-      SERVER_PASS: /run/secrets/server_pass
-      SERVER_PUBLIC: "true"
-      SUPERVISOR_HTTP: "true"
-      SUPERVISOR_HTTP_PASS: /run/secrets/server_sup_password
-      STATUS_HTTP: "true"
-      BEPINEX: "true"
+    env_file:
+      - ./env.secret
     restart: always
     stop_grace_period: 2m
     labels:
