@@ -19,7 +19,7 @@ services:
     volumes:
       # Bind data directory
         - type: bind
-          source: ./data
+          source: /var/srv/portainer
           target: /data
       # Bind docker
         - type: bind
