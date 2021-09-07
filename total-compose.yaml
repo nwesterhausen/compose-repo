@@ -1,0 +1,29 @@
+services:
+  - name: paperless
+    location: ~/compose-repo/paperless/docker-compose.yml
+    description: Linuxserver.io services
+  - name: adguard
+    location: ~/compose-repo/adguardhome/docker-compose.yml
+    description: Linuxserver.io services
+  - name: code
+    location: ~/compose-repo/code-server/docker-compose.yml
+    description: Linuxserver.io services
+  - name: apprise
+    location: ~/compose-repo/apprise-api/docker-compose.yml
+    description: Linuxserver.io services
+  - name: network
+    location: ~/compose-repo/network/docker-compose.yml
+    description: Linuxserver.io services
+  - name: traefik
+    location: ~/compose-repo/traefik/docker-compose.yml
+    description: Traefik reverse proxy
+  - name: matrix
+    location: ~/compose-repo/dendrite/build/docker/docker-compose.yml
+    description: Dendrite matrix server
+  - name: portainer
+    location: ~/compose-repo/portainer/docker-compose.yml
+    description: Portainer docker dashboard
+  - name: valheim
+    location: ~/compose-repo/valheim/docker-compose.yml
+    description: Valheim game server
+assume-yes: false

@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+    traefik:
+        restart: unless-stopped
+        image: traefik:latest
+        networks:
+            - proxy
+        volumes:
+        # Bind the traefik yml configuration file
+        # Bind dynamic.d
+        # Provide persistent storage for acme.json
+          - type: bind
+            source: ./
+            target: /etc/traefik/
+        # Bind a log directory for logging
+          - type: bind
+            source: /var/srv/logs/traefik
+            target: /logs/
+        # Bind the docker socket
+          - type: bind
+            source: /var/run/docker.sock
+            target: /var/run/docker.sock
+        # Connect localtime
+          - type: bind
+            source: /etc/localtime
+            target: /etc/localtime
+            read_only: true
+        dns:
+            - 9.9.9.9
+            - 1.1.1.1
+            - 8.8.8.8
+        environment:
+            CF_DNS_API_TOKEN: 0Op59S78fKy11nyYkXtx6ZBcCCyQ_pTn-lFGEukZ
+            CF_ZONE_API_TOKEN: 0Op59S78fKy11nyYkXtx6ZBcCCyQ_pTn-lFGEukZ            
+        labels:
+            traefik.http.routers.api.rule: Host(`traefik.docker.nwest.xyz`)
+            traefik.http.routers.api.service: api@internal
+            traefik.http.routers.api.entrypoints: https
+            traefik.http.routers.api.tls: "true"
+            treafik.http.routers.api.tls.certresolver: main
+        ports:
+            - 80:80     #http
+            - 443:443   #https
+            - 8081:8081 #ws
+            - 8083:8083 #wss
+            - 8448:8448 #matrix
+
+networks:
+  proxy: 
+    external: true
+    name: proxy

@@ -1,0 +1,42 @@
+version: "3.9"
+
+services: 
+  valheim: 
+    image: lloesche/valheim-server
+    cap_add:
+      - sys_nice
+    volumes: 
+      - type: bind
+        source: /var/srv/valheim-server/config
+        target: /config
+      - type: bind
+        source: /var/srv/valheim-server/data
+        target: /opt/valheim
+    ports: 
+      - "2456-2458:2456-2458/udp"
+      - "9001:9001/tcp"
+      - "9002:80/tcp"
+    environment:
+      SERVER_NAME: valheim.nwest.games
+      WORLD_NAME: Dedicated
+      SERVER_PASS: pen15
+      SERVER_PUBLIC: "true"
+      SUPERVISOR_HTTP: "true"
+      SUPERVISOR_HTTP_PASS: password
+      STATUS_HTTP: "true"
+      BEPINEX: "true"
+    restart: always
+    stop_grace_period: 2m
+    labels:
+      traefik.http.routers.valheim-rcon.rule: Host(`rcon.valheim.nwest.games`)
+      traefik.http.routers.valheim-rcon.tls: 'true'
+      traefik.http.routers.valheim-rcon.service: valheim-rcon-svc@docker
+      traefik.http.routers.valheim-rcon.entrypoints: https
+      traefik.http.services.valheim-rcon-svc.loadbalancer.server.port: 9001
+      traefik.http.services.valheim-rcon-svc.loadbalancer.server.scheme: http
+      traefik.http.routers.valheim-status.rule: Host(`status.valheim.nwest.games`)
+      traefik.http.routers.valheim-status.tls: 'true'
+      traefik.http.routers.valheim-status.service: valheim-status-svc@docker
+      traefik.http.routers.valheim-status.entrypoints: https
+      traefik.http.services.valheim-status-svc.loadbalancer.server.port: 9002
+      traefik.http.services.valheim-status-svc.loadbalancer.server.scheme: http

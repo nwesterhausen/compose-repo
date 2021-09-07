@@ -1,0 +1,25 @@
+version: '3.9'
+networks:
+  proxy:
+    external: true
+    name: proxy
+services:
+  apprise:
+    image: ghcr.io/linuxserver/apprise-api
+    restart: unless-stopped
+    env_file:
+      - ../common.env
+    networks:
+      - proxy
+    volumes:
+      - type: bind
+        source: ../../config/apprise
+        target: /config
+    restart: unless-stopped
+    labels:
+      traefik.http.routers.apprise.rule: Host(`apprise.nwest.xyz`)
+      traefik.http.routers.apprise.tls: 'true'
+      treafik.http.routers.apprise.tls.certresolver: main
+      traefik.http.routers.apprise.service: apprise-linuxserverio@docker
+      traefik.http.routers.apprise.entrypoints: https
+      traefik.http.services.apprise-linuxserverio.loadbalancer.server.port: 8000

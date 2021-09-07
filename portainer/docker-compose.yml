@@ -1,0 +1,42 @@
+services:
+  portainer:
+    restart: always
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    networks:
+        - proxy
+    ports:
+      # Publish the dashboard port
+        - target: 9000
+          published: 10199
+          protocol: tcp
+          mode: host
+      # Publish the portainer communication port
+        - target: 8000
+          published: 8000
+          protocol: tcp
+          mode: host
+    volumes:
+      # Bind data directory
+        - type: bind
+          source: ./data
+          target: /data
+      # Bind docker
+        - type: bind
+          source: /var/run/docker.sock
+          target: /var/run/docker.sock    
+    labels:
+      traefik.http.routers.portainer.rule: Host(`docker.nwest.xyz`)
+      traefik.http.routers.portainer.tls: "true"
+      treafik.http.routers.portainer.tls.certresolver: main
+      traefik.http.routers.portainer.service: portainer-portainer@docker
+      traefik.http.routers.portainer.entrypoints: https
+      traefik.http.services.portainer-portainer.loadbalancer.server.port: 9000
+      traefik.http.routers.portainer.tls.domains[0].main: docker.nwest.xyz
+
+version: '3.9'
+
+networks:
+  proxy: 
+      external: true
+      name: proxy
