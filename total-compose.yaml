@@ -1,19 +1,19 @@
 services:
   - name: paperless
     location: ~/compose-repo/paperless/docker-compose.yml
-    description: Linuxserver.io services
+    description: paperless-ng document server
   - name: adguard
     location: ~/compose-repo/adguardhome/docker-compose.yml
-    description: Linuxserver.io services
+    description: adguard home dns server
   - name: code
     location: ~/compose-repo/code-server/docker-compose.yml
-    description: Linuxserver.io services
+    description: vscode server enabling easier workflow
   - name: apprise
-    location: ~/compose-repo/apprise-api/docker-compose.yml
-    description: Linuxserver.io services
+    location: ~/compose-repo/apprise/docker-compose.yml
+    description: apprise notification service api
   - name: network
     location: ~/compose-repo/network/docker-compose.yml
-    description: Linuxserver.io services
+    description: Unifi controller and adguardhome-sync
   - name: traefik
     location: ~/compose-repo/traefik/docker-compose.yml
     description: Traefik reverse proxy
