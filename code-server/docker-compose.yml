@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  
+  code-server:
+    image: ghcr.io/linuxserver/code-server
+    restart: unless-stopped
+    env_file:
+      - ../common.env
+      - ./vscode.env
+    volumes:
+      - type: bind
+        source: /var/srv/vscode/server1/
+        target: /config
+      - type: bind
+        source: /home/nwest/
+        target: /code
+    networks:
+      - proxy
+    labels:
+      traefik.http.routers.vscode.rule: Host(`edit.docker.nwest.xyz`)
+      traefik.http.routers.vscode.tls: 'true'
+      treafik.http.routers.vscode.tls.certresolver: main
+      traefik.http.routers.vscode.service: code-server-code-server@docker
+      traefik.http.routers.vscode.entrypoints: https
+
+networks:
+  proxy:
+    external: true
+    name: proxy
