@@ -1,0 +1,27 @@
+version: '3.9'
+networks:
+  proxy:
+    external: true
+    name: proxy
+
+services:
+  paperless-ng:
+    image: ghcr.io/linuxserver/paperless-ng
+    env_file:
+      - ../common.env
+    networks:
+      - proxy
+    volumes:
+      - type: bind
+        source: /var/srv/paperless/config
+        target: /config
+      - type: bind
+        source: /var/srv/paperless/data
+        target: /data
+    restart: unless-stopped
+    labels:
+      traefik.http.routers.paperless.rule: Host(`paperless.nwest.one`)
+      traefik.http.routers.paperless.tls: 'true'
+      treafik.http.routers.paperless.tls.certresolver: main
+      traefik.http.routers.paperless.service: paperless-ng-paperless@docker
+      traefik.http.routers.paperless.entrypoints: https
