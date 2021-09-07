@@ -11,7 +11,7 @@ services:
         # Bind dynamic.d
         # Provide persistent storage for acme.json
           - type: bind
-            source: ./
+            source: /var/srv/traefik/
             target: /etc/traefik/
         # Bind a log directory for logging
           - type: bind
@@ -30,9 +30,11 @@ services:
             - 9.9.9.9
             - 1.1.1.1
             - 8.8.8.8
+        secrets:
+            - cf_dns
         environment:
-            CF_DNS_API_TOKEN: 0Op59S78fKy11nyYkXtx6ZBcCCyQ_pTn-lFGEukZ
-            CF_ZONE_API_TOKEN: 0Op59S78fKy11nyYkXtx6ZBcCCyQ_pTn-lFGEukZ            
+            CF_DNS_API_TOKEN: /run/secrets/cf_dns
+            CF_ZONE_API_TOKEN: /run/secrets/cf_dns       
         labels:
             traefik.http.routers.api.rule: Host(`traefik.docker.nwest.xyz`)
             traefik.http.routers.api.service: api@internal
@@ -45,6 +47,10 @@ services:
             - 8081:8081 #ws
             - 8083:8083 #wss
             - 8448:8448 #matrix
+
+secrets:
+  cf_dns:
+    file: ./cf_dns.secret
 
 networks:
   proxy: 
