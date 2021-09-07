@@ -13,10 +13,10 @@ services:
       - proxy
     volumes:
       - type: bind
-        source: ./config
+        source: /var/srv/adguard/config
         target: /opt/adguardhome/conf
       - type: bind
-        source: /var/srv/adguardhome
+        source: /var/srv/adguard/work
         target: /opt/adguardhome/work
     ports:
     # DNS
