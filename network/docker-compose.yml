@@ -1,0 +1,87 @@
+version: '3.9'
+networks:
+  proxy:
+    external: true
+    name: proxy
+services: 
+  adguardhome-sync:
+    image: ghcr.io/linuxserver/adguardhome-sync
+    env_file:
+      - ../common.env
+    networks:
+      - proxy
+    volumes:
+      - type: bind
+        source: /var/srv/adguardhome-sync/
+        target: /config
+    dns:
+      - 10.20.0.1
+    labels:
+      traefik.http.routers.adguard-sync.rule: Host(`adguard-sync.network.nwest.xyz`)
+      traefik.http.routers.adguard-sync.tls: 'true'
+      treafik.http.routers.adguard-sync.tls.certresolver: main
+      traefik.http.routers.adguard-sync.service: adguardhome-sync-network@docker
+      traefik.http.routers.adguard-sync.entrypoints: https
+    restart: unless-stopped
+  unifi-controller:
+    image: ghcr.io/linuxserver/unifi-controller
+    env_file:
+      - ../common.env
+    environment: 
+      MEM_LIMIT: 4096M
+      MEM_STARTUP: 1024M
+    networks:
+      - proxy
+    ports:    
+    # UNIFI STUN
+      - target: 3478
+        published: 3478
+        protocol: udp
+        mode: host
+    # INFORM / DEVICE COM
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+    # GUEST PORTAL HTTP
+      - target: 8880
+        published: 8880
+        protocol: tcp
+        mode: host
+    # GUEST PORTAL HTTPS
+      - target: 8843
+        published: 8843
+        protocol: tcp
+        mode: host
+    # MOBILE THROUGHPUT TEST
+      - target: 6789
+        published: 6789
+        protocol: tcp
+        mode: host
+    # L2 DISCOVERABLE
+      - target: 1900
+        published: 1900
+        protocol: udp
+        mode: host
+    # REMOTE SYSLOG
+      - target: 5514
+        published: 5514
+        protocol: udp
+        mode: host
+    # AP DISCOVERY
+      - target: 10001
+        published: 10001
+        protocol: udp
+        mode: host
+    volumes:
+      - type: bind
+        source: /var/srv/unifi
+        target: /config
+    labels:
+      traefik.http.routers.unifi.rule: Host(`unifi.network.nwest.xyz`)
+      traefik.http.routers.unifi.tls: 'true'
+      treafik.http.routers.unifi.tls.certresolver: main
+      traefik.http.routers.unifi.service: unifi-controller-network@docker
+      traefik.http.routers.unifi.entrypoints: https
+      traefik.http.services.unifi-controller-network.loadbalancer.server.port: 8443
+      traefik.http.services.unifi-controller-network.loadbalancer.server.scheme: https
