@@ -24,6 +24,10 @@ services:
       - "2456-2458:2456-2458/udp"
       - "9001:9001/tcp"
       - "9002:80/tcp"
+    secrets:
+      - server_name
+      - server_pass
+      - server_sup_password
     environment:
       SERVER_NAME: /run/secrets/server_name
       WORLD_NAME: Dedicated
