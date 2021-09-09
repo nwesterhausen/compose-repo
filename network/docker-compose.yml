@@ -73,6 +73,7 @@ services:
         published: 10001
         protocol: udp
         mode: host
+    restart: unless-stopped
     volumes:
       - type: bind
         source: /var/srv/unifi

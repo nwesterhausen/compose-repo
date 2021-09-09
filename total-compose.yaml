@@ -17,9 +17,9 @@ services:
   - name: traefik
     location: ~/compose-repo/traefik/docker-compose.yml
     description: Traefik reverse proxy
-  - name: matrix
-    location: ~/compose-repo/dendrite/build/docker/docker-compose.yml
-    description: Dendrite matrix server
+#  - name: matrix
+#    location: ~/compose-repo/dendrite/build/docker/docker-compose.yml
+#    description: Dendrite matrix server
   - name: portainer
     location: ~/compose-repo/portainer/docker-compose.yml
     description: Portainer docker dashboard
