@@ -1,11 +1,5 @@
 version: "3.9"
 
-secrets:
-  server_pass:
-    file: ./server_pass.secret
-  server_sup_password:
-    file: ./supervisor_pass.secret
-
 services: 
   valheim: 
     image: lloesche/valheim-server
@@ -24,6 +18,7 @@ services:
       - "9002:80/tcp"
     env_file:
       - ./env.secret
+      - ../common.env
     restart: unless-stopped
     stop_grace_period: 2m
     labels:
