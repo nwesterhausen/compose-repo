@@ -1,7 +1,7 @@
 version: '3.9'
 
 networks:
-  proxy: 
+  proxy:
     external: true
     name: proxy
 
@@ -16,18 +16,18 @@ services:
         source: /var/srv/adguard/config
         target: /opt/adguardhome/conf
       - type: bind
-        source: /var/srv/adguard/work
+        source: /var/srv/adguard/data
         target: /opt/adguardhome/work
     ports:
-    # DNS
-      - "53:53/udp"
-      - "53:53"
-      - "853:853/udp"
-      - "784:784/udp"
-      - "5443:5443"
-      - "5443:5443/udp"
-      - "853:853"
-      - "8853:8853/udp"
+      # DNS
+      - '53:53/udp'
+      - '53:53'
+      - '853:853/udp'
+      - '784:784/udp'
+      - '5443:5443'
+      - '5443:5443/udp'
+      - '853:853'
+      - '8853:8853/udp'
     labels:
       traefik.http.routers.adguardhome.rule: Host(`adguardhome1.network.nwest.xyz`)
       traefik.http.routers.adguardhome.tls: 'true'
